@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubori Organix | Organic Agro-Processing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #E67E22;
+            --secondary: #2ECC71;
+            --neutral: #F9F9F9;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--neutral);
+            scroll-behavior: smooth;
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(230, 126, 34, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.9) 0%, rgba(46, 204, 113, 0.8) 100%);
+        }
+        
+        .product-card {
+            perspective: 1000px;
+            transition: transform 0.5s;
+        }
+        
+        .product-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .product-card:hover .product-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .product-card-front, .product-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .product-card-back {
+            transform: rotateY(180deg);
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        
+        .process-step {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .counter {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .testimonial-card {
+            min-width: 300px;
+            scroll-snap-align: start;
+        }
+        
+        .testimonial-container {
+            scroll-snap-type: x mandatory;
+        }
+        
+        .floating-label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: #999;
+        }
+        
+        .form-input:focus + .floating-label,
+        .form-input:not(:placeholder-shown) + .floating-label {
+            top: -0.5rem;
+            left: 0.8rem;
+            font-size: 0.8rem;
+            background: white;
+            padding: 0 0.3rem;
+            color: var(--primary);
+        }
+        
+        .whatsapp-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 50;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p class="mt-4 text-gray-600">Processing nature's goodness...</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <img src="https://via.placeholder.com/50x50" alt="Ubori Organix Logo" class="h-10 mr-3">
+                        <span class="text-xl font-bold text-[var(--primary)]">Ubori Organix</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-800 hover:text-[var(--primary)] font-medium">Home</a>
+                    <a href="#products" class="text-gray-800 hover:text-[var(--primary)] font-medium">Products</a>
+                    <a href="#process" class="text-gray-800 hover:text-[var(--primary)] font-medium">Our Process</a>
+                    <a href="#sustainability" class="text-gray-800 hover:text-[var(--primary)] font-medium">Sustainability</a>
+                    <a href="#testimonials" class="text-gray-800 hover:text-[var(--primary)] font-medium">Testimonials</a>
+                    <a href="#contact" class="text-gray-800 hover:text-[var(--primary)] font-medium">Contact</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#home" class="text-gray-800 hover:text-[var(--primary)] font-medium">Home</a>
+                    <a href="#products" class="text-gray-800 hover:text-[var(--primary)] font-medium">Products</a>
+                    <a href="#process" class="text-gray-800 hover:text-[var(--primary)] font-medium">Our Process</a>
+                    <a href="#sustainability" class="text-gray-800 hover:text-[var(--primary)] font-medium">Sustainability</a>
+                    <a href="#testimonials" class="text-gray-800 hover:text-[var(--primary)] font-medium">Testimonials</a>
+                    <a href="#contact" class="text-gray-800 hover:text-[var(--primary)] font-medium">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white py-20 relative overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_5tkust8r.json" background="transparent" speed="1" loop autoplay class="w-full h-full object-cover opacity-20"></lottie-player>
+        </div>
+        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center relative z-10">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">100% Organic. Zero Waste. <br>From Plateau to the World.</h1>
+                <p class="text-xl mb-8">Premium agro-products from Nigeria's heartland - sustainably processed for your health and our planet.</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button class="bg-white text-[var(--primary)] font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                        Shop Now
+                    </button>
+                    <button class="border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-[var(--primary)] transition duration-300 transform hover:scale-105">
+                        Bulk Orders
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_5tkust8r.json" background="transparent" speed="1" loop autoplay class="w-full max-w-md"></lottie-player>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase -->
+    <section id="products" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Premium Products</h2>
+                <div class="w-20 h-1 bg-[var(--primary)] mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Product 1 -->
+                <div class="product-card h-96">
+                    <div class="product-card-inner h-full">
+                        <div class="product-card-front h-full">
+                            <div class="h-full bg-gray-100 rounded-xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1618278757315-9c7256a6b98c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Cold-pressed Groundnut Oil" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+                                    <h3 class="text-xl font-bold text-white">Cold-Pressed Groundnut Oil</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-card-back h-full">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Cold-Pressed Groundnut Oil</h3>
+                            <p class="text-gray-600 mb-4">100% pure, unrefined oil extracted at low temperatures to preserve nutrients and natural flavor.</p>
+                            <ul class="text-gray-600 mb-4 space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> High smoke point (230°C)</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> Rich in Vitamin E</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> No chemical additives</li>
+                            </ul>
+                            <button class="mt-auto bg-[var(--primary)] text-white font-bold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 w-full">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card h-96">
+                    <div class="product-card-inner h-full">
+                        <div class="product-card-front h-full">
+                            <div class="h-full bg-gray-100 rounded-xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1622206151229-18d2c0e6ea3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Organic Peanut Butter" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+                                    <h3 class="text-xl font-bold text-white">Organic Peanut Butter</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-card-back h-full">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Organic Peanut Butter</h3>
+                            <p class="text-gray-600 mb-4">Creamy or crunchy, made from premium roasted peanuts with no added sugar or palm oil.</p>
+                            <ul class="text-gray-600 mb-4 space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> High protein content</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> Rich in healthy fats</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> No preservatives</li>
+                            </ul>
+                            <button class="mt-auto bg-[var(--primary)] text-white font-bold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 w-full">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card h-96">
+                    <div class="product-card-inner h-full">
+                        <div class="product-card-front h-full">
+                            <div class="h-full bg-gray-100 rounded-xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1589927986089-35812388d1b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Eco-Friendly Egg Crates" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+                                    <h3 class="text-xl font-bold text-white">Eco-Friendly Egg Crates</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-card-back h-full">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Eco-Friendly Egg Crates</h3>
+                            <p class="text-gray-600 mb-4">Sustainable packaging made from recycled agricultural waste and peanut shells.</p>
+                            <ul class="text-gray-600 mb-4 space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> 100% biodegradable</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> Durable and protective</li>
+                                <li class="flex items-center"><i class="fas fa-check text-[var(--secondary)] mr-2"></i> Carbon negative</li>
+                            </ul>
+                            <button class="mt-auto bg-[var(--primary)] text-white font-bold py-2 px-6 rounded-full hover:bg-orange-600 transition duration-300 w-full">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Flow -->
+    <section id="process" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Organic Process</h2>
+                <div class="w-20 h-1 bg-[var(--primary)] mx-auto"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto mt-4">From farm to table, we maintain the highest standards at every step of production.</p>
+            </div>
+            
+            <div class="relative">
+                <div class="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gray-300 -translate-y-1/2"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4">
+                    <!-- Step 1 -->
+                    <div class="process-step bg-white p-6 rounded-xl shadow-md text-center relative z-10">
+                        <div class="w-20 h-20 bg-[var(--primary)] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl pulse">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Organic Farming</h3>
+                        <p class="text-gray-600">We source peanuts from certified organic farms in Plateau State, free from synthetic pesticides.</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="process-step bg-white p-6 rounded-xl shadow-md text-center relative z-10">
+                        <div class="w-20 h-20 bg-[var(--primary)] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl pulse">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Precision Roasting</h3>
+                        <p class="text-gray-600">Our peanuts are roasted at optimal temperatures to enhance flavor while preserving nutrients.</p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="process-step bg-white p-6 rounded-xl shadow-md text-center relative z-10">
+                        <div class="w-20 h-20 bg-[var(--primary)] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl pulse">
+                            <i class="fas fa-oil-can"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Cold-Press Extraction</h3>
+                        <p class="text-gray-600">Using traditional methods, we extract oil below 50°C to maintain nutritional integrity.</p>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="process-step bg-white p-6 rounded-xl shadow-md text-center relative z-10">
+                        <div class="w-20 h-20 bg-[var(--primary)] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl pulse">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Eco-Packaging</h3>
+                        <p class="text-gray-600">We package in recyclable glass and reuse agricultural waste for egg crates.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center">
+                <button class="border-2 border-[var(--primary)] text-[var(--primary)] font-bold py-3 px-8 rounded-full hover:bg-[var(--primary)] hover:text-white transition duration-300 inline-flex items-center">
+                    <i class="fas fa-play-circle mr-2"></i> Watch Our Process Video
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sustainability Section -->
+    <section id="sustainability" class="py-32 text-white parallax" style="background-image: url('https://images.unsplash.com/photo-1508514177221-188e1eaf7083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1800&q=80')">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Sustainability at Our Core</h2>
+                <p class="text-xl mb-12">We measure success not just by profits, but by our positive impact on people and planet.</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="bg-white bg-opacity-20 p-6 rounded-xl backdrop-blur-sm">
+                        <div class="counter" data-target="500">0</div>
+                        <p class="text-sm uppercase tracking-wider">Litres Produced Daily</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-6 rounded-xl backdrop-blur-sm">
+                        <div class="counter" data-target="120">0</div>
+                        <p class="text-sm uppercase tracking-wider">Local Farmers Empowered</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-6 rounded-xl backdrop-blur-sm">
+                        <div class="counter" data-target="95">0</div>
+                        <p class="text-sm uppercase tracking-wider">Waste Recycled</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-6 rounded-xl backdrop-blur-sm">
+                        <div class="counter" data-target="10000">0</div>
+                        <p class="text-sm uppercase tracking-wider">Egg Crates Produced</p>
+                    </div>
+                </div>
+                
+                <div class="mt-16">
+                    <button class="border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-[var(--primary)] transition duration-300">
+                        Learn About Our Sustainability Initiatives
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">What People Say About Us</h2>
+                <div class="w-20 h-1 bg-[var(--primary)] mx-auto"></div>
+            </div>
+            
+            <div class="testimonial-container flex overflow-x-auto pb-8 -mx-6 px-6 scrollbar-hide">
+                <div class="testimonial-card mr-6 bg-gray-50 p-8 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Amina Bello</h4>
+                            <p class="text-gray-500 text-sm">Restaurant Owner, Abuja</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"Ubori Organix oil has transformed our kitchen. The flavor profile is unmatched, and our customers consistently compliment the quality of our fried dishes."</p>
+                    <div class="flex text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card mr-6 bg-gray-50 p-8 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Emeka Okonkwo</h4>
+                            <p class="text-gray-500 text-sm">Health Coach, Lagos</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"As a nutritionist, I recommend Ubori Organix products to all my clients. The cold-pressed oil retains its natural antioxidants, making it a healthier choice for cooking."</p>
+                    <div class="flex text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card mr-6 bg-gray-50 p-8 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Chioma Adeleke</h4>
+                            <p class="text-gray-500 text-sm">Home Cook, Port Harcourt</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"The peanut butter is simply divine! No added sugar or palm oil, just pure roasted peanut goodness. My kids love it on their breakfast toast."</p>
+                    <div class="flex text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card mr-6 bg-gray-50 p-8 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Ibrahim Mohammed</h4>
+                            <p class="text-gray-500 text-sm">Poultry Farmer, Kano</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-4">"The egg crates from Ubori Organix are not just eco-friendly but also more durable than plastic ones. I appreciate their commitment to sustainability."</p>
+                    <div class="flex text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Get In Touch</h2>
+                <div class="w-20 h-1 bg-[var(--primary)] mx-auto"></div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-lg overflow-hidden max-w-6xl mx-auto">
+                <div class="md:w-1/2 p-8 md:p-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Contact Information</h3>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="bg-[var(--primary)] bg-opacity-10 p-3 rounded-full mr-4">
+                            <i class="fas fa-map-marker-alt text-[var(--primary)]"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Address</h4>
+                            <p class="text-gray-600">No. 47, Cornerstone Kabong Village, Off Rukuba Road, Jos, Nigeria</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="bg-[var(--primary)] bg-opacity-10 p-3 rounded-full mr-4">
+                            <i class="fas fa-phone-alt text-[var(--primary)]"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Phone</h4>
+                            <p class="text-gray-600">+234 903 657 3414</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start mb-6">
+                        <div class="bg-[var(--primary)] bg-opacity-10 p-3 rounded-full mr-4">
+                            <i class="fas fa-envelope text-[var(--primary)]"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Email</h4>
+                            <p class="text-gray-600">info@uboriorganix.com</p>
+                        </div>
+                    </div>
+                    
+                    <h4 class="font-bold text-gray-800 mb-4">Business Hours</h4>
+                    <p class="text-gray-600 mb-2">Monday - Friday: 8:00 AM - 5:00 PM</p>
+                    <p class="text-gray-600">Saturday: 9:00 AM - 2:00 PM</p>
+                    
+                    <div class="mt-8">
+                        <h4 class="font-bold text-gray-800 mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 hover:bg-[var(--primary)] hover:text-white transition duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 hover:bg-[var(--primary)] hover:text-white transition duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 hover:bg-[var(--primary)] hover:text-white transition duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-700 hover:bg-[var(--primary)] hover:text-white transition duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 bg-gray-100 p-8 md:p-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                    <form>
+                        <div class="mb-6 relative">
+                            <input type="text" id="name" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder=" ">
+                            <label for="name" class="floating-label">Your Name</label>
+                        </div>
+                        
+                        <div class="mb-6 relative">
+                            <input type="email" id="email" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder=" ">
+                            <label for="email" class="floating-label">Email Address</label>
+                        </div>
+                        
+                        <div class="mb-6 relative">
+                            <input type="text" id="subject" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder=" ">
+                            <label for="subject" class="floating-label">Subject</label>
+                        </div>
+                        
+                        <div class="mb-6 relative">
+                            <textarea id="message" rows="4" class="form-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder=" "></textarea>
+                            <label for="message" class="floating-label">Your Message</label>
+                        </div>
+                        
+                        <button type="submit" class="bg-[var(--primary)] text-white font-bold py-3 px-8 rounded-full hover:bg-orange-600 transition duration-300 w-full">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://via.placeholder.com/50x50" alt="Ubori Organix Logo" class="h-10 mr-3">
+                        <span class="text-xl font-bold text-[var(--primary)]">Ubori Organix</span>
+                    </div>
+                    <p class="text-gray-400">Pure organic agro-products from Nigeria's heartland - sustainably processed for your health and our planet.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Home</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Products</a></li>
+                        <li><a href="#process" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Our Process</a></li>
+                        <li><a href="#sustainability" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Sustainability</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Products</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Groundnut Oil</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Peanut Butter</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Egg Crates</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300">Bulk Orders</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on our products and promotions.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg w-full focus:outline-none text-gray-800">
+                        <button class="bg-[var(--primary)] px-4 py-2 rounded-r-lg hover:bg-orange-600 transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 Ubori Organix. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300 text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300 text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-[var(--primary)] transition duration-300 text-sm">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/2349036573414" class="whatsapp-button">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <script>
+        // Hide loading screen when page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.loading-screen').style.opacity = '0';
+                setTimeout(function() {
+                    document.querySelector('.loading-screen').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (!document.getElementById('mobile-menu').classList.contains('hidden')) {
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate process steps
+        gsap.utils.toArray('.process-step').forEach((step, i) => {
+            gsap.from(step, {
+                scrollTrigger: {
+                    trigger: step,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: i * 0.2
+            });
+        });
+        
+        // Animate counter
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+        
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const increment = target / speed;
+            
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCount, 1);
+            } else {
+                counter.innerText = target;
+            }
+            
+            function updateCount() {
+                const count = +counter.innerText;
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            }
+            
+            ScrollTrigger.create({
+                trigger: counter,
+                start: "top 80%",
+                onEnter: updateCount
+            });
+        });
+        
+        // Auto-scroll testimonials
+        let testimonialContainer = document.querySelector('.testimonial-container');
+        let scrollAmount = 0;
+        let scrollSpeed = 0.5;
+        
+        function autoScrollTestimonials() {
+            scrollAmount += scrollSpeed;
+            if (scrollAmount >= testimonialContainer.scrollWidth - testimonialContainer.clientWidth) {
+                scrollAmount = 0;
+            }
+            testimonialContainer.scrollLeft = scrollAmount;
+            requestAnimationFrame(autoScrollTestimonials);
+        }
+        
+        // Start auto-scroll after page loads
+        setTimeout(autoScrollTestimonials, 3000);
+    </script>
+</body>
+</html>
