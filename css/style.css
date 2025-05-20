@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #E67E22;
+    --secondary: #2ECC71;
+    --neutral: #F9F9F9;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--neutral);
+    scroll-behavior: smooth;
+}
+
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid rgba(230, 126, 34, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.hero-gradient {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.9) 0%, rgba(46, 204, 113, 0.8) 100%);
+}
+
+.product-card {
+    perspective: 1000px;
+    transition: transform 0.5s;
+}
+
+.product-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.product-card:hover .product-card-inner {
+    transform: rotateY(180deg);
+}
+
+.product-card-front, .product-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.product-card-back {
+    transform: rotateY(180deg);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.process-step {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.counter {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.testimonial-card {
+    min-width: 300px;
+    scroll-snap-align: start;
+}
+
+.testimonial-container {
+    scroll-snap-type: x mandatory;
+}
+
+.floating-label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    color: #999;
+}
+
+.form-input:focus + .floating-label,
+.form-input:not(:placeholder-shown) + .floating-label {
+    top: -0.5rem;
+    left: 0.8rem;
+    font-size: 0.8rem;
+    background: white;
+    padding: 0 0.3rem;
+    color: var(--primary);
+}
+
+.whatsapp-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 50;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
